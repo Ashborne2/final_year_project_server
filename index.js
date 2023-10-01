@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const secretKey = "thisismysecretkey";
+const Claimmodel = require("./model/claimmodel");
 
 app.use(cors());
 app.use(express.json());
@@ -82,6 +83,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -90,7 +92,7 @@ app.post("/login", async (req, res) => {
   });
 
   if (!user) {
-    console.log(req.body);
+    // console.log(req.body);
 
     res.send({ status: "failed", message: "User not found" });
   } else {
@@ -114,7 +116,7 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    console.log(req.body);
+    // console.log(req.body);
   }
 });
 

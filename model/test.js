@@ -1,10 +1,4 @@
-const claimSchema = new mongoose.Schema({
-    claim_id: { type: String, required: true },
-    user_id: { type: String, required: true },
-    date: { type: String, required: true },
-    description: { type: String, required: true },
-    status: { type: String, required: true },
-  });
+
   
   const underwritingSchema = new mongoose.Schema({
     riskLevel: { type: String, required: true },
