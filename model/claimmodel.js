@@ -1,14 +1,16 @@
 const mongoose = require("mongoose");
+const usermodel = require("./usermodel");
 
 const claimSchema = new mongoose.Schema({
-    claim_id: { type: String, required: true },
-    user_id: { type: String, required: true },
-    Broker_id: { type: String, required: true },
-    Insurance_id: { type: String, required: true },
-    date: { type: String, required: true },
-    description: { type: String, required: true },
-    file: { type: String, required: true },
-    
-  });
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: usermodel },
+  broker_name: { type: String },
+  Insurance_id: { type: String },
+  policy_code: { type: String },
+  location: { type: String },
+  date_time: { type: String, },
+  submitted_time: { type: Date, default: Date.now },
+  description: { type: String },
+  file: { type: String },
+});
 
 module.exports = mongoose.model("Claimmodel", claimSchema);
