@@ -4,13 +4,13 @@ const app = express();
 const bodyParser = require("body-parser");
 require("./config/config");
 const usermodel = require("./model/usermodel");
-// const Usermodel = require("./model/Usermodel");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const secretKey = "thisismysecretkey";
 const Claimmodel = require("./model/claimmodel");
 const claimmodel = require("./model/claimmodel");
+const chatmodel = require("./model/messages");
 const multer  = require('multer')
 
 app.use(cors());
@@ -96,8 +96,6 @@ app.post("/login", async (req, res) => {
   });
 
   if (!user) {
-    // console.log(req.body);
-
     res.send({ status: "failed", message: "User not found" });
   } else {
     const comparePassword = await bcrypt.compare(password, user.password);
@@ -120,8 +118,6 @@ app.post("/login", async (req, res) => {
         }
       });
     }
-
-    // console.log(req.body);
   }
 });
 
@@ -185,8 +181,6 @@ const upload = multer({ storage: storage })
 
 
 app.post("/claim",upload.single('file') ,async(req, res) =>{
-  // console.log(req.file.originalname);
-  
   const claimdata = JSON.parse(req.body.claimdata);
   const claim = new Claimmodel({
 
@@ -199,8 +193,7 @@ app.post("/claim",upload.single('file') ,async(req, res) =>{
     }else{
       res.json({status:"failed",message:"claim not submitted"});
     }
-  // console.log(claimdata);
-  // res.send("image uploaded");
+  
 });
 
 

@@ -6,6 +6,7 @@ const claimSchema = new mongoose.Schema({
   broker_name: { type: String },
   Insurance_id: { type: String },
   policy_code: { type: String },
+  damage_coverage: { type: String },
   location: { type: String },
   date_time: { type: String, },
   submitted_time: { type: Date, default: Date.now },
