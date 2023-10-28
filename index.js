@@ -11,6 +11,7 @@ const secretKey = "thisismysecretkey";
 const Claimmodel = require("./model/claimmodel");
 const claimmodel = require("./model/claimmodel");
 const chatmodel = require("./model/messages");
+const Policymodel = require("./model/policymodel");
 const multer  = require('multer')
 
 app.use(cors());
@@ -193,6 +194,36 @@ app.post("/claim",upload.single('file') ,async(req, res) =>{
     }else{
       res.json({status:"failed",message:"claim not submitted"});
     }
+  
+});
+
+app.post("/policy",upload.single('file') ,async (req, res) => {
+  
+  const policydata = JSON.parse(req.body.policydata);
+  const policy = new Policymodel({
+    ...policydata,
+    file:'http://192.168.10.196:5000/images/'+req.file.filename,
+  });
+  let policySave = await policy.save();
+  if(policySave){
+    res.json({status:"success",message:"policy submitted",data:policySave});
+  }else{
+    res.json({status:"failed",message:"policy not submitted"});
+  }
+
+});
+
+app.get("/getpolicy", async (req, res) => {
+
+  const policydata = await Policymodel.find();
+
+  if (policydata) {
+    res.json({status:"success",message:"data retrieved" ,data:policydata});
+    // console.log();
+  } else {
+    ("Could not get data");
+  }
+
   
 });
 
