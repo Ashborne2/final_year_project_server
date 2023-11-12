@@ -14,6 +14,7 @@ const chatmodel = require("./model/messages");
 const Policymodel = require("./model/policymodel");
 const multer  = require('multer')
 
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -225,6 +226,13 @@ app.get("/getpolicy", async (req, res) => {
   }
 
   
+});
+
+app.post("/checkout", async (req, res) => {
+  
+  
+   console.log(req.body);
+
 });
 
 
