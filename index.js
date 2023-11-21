@@ -13,6 +13,10 @@ const claimmodel = require("./model/claimmodel");
 const chatmodel = require("./model/messages");
 const Policymodel = require("./model/policymodel");
 const multer  = require('multer')
+const { PythonShell } = require('python-shell');
+
+const modeeelPath = './model.pkl';
+// const predict = require('../script/predict.py');
 
 
 app.use(cors());
@@ -124,21 +128,6 @@ app.post("/login", async (req, res) => {
 });
 
 
-// app.post("/claim", async (req, res) => {
-
-//   const claim = new Claimmodel({
-//    ...req.body,
-//   });
-
-//  let claimdata = await claim.save();
-  
-
-//   if (claimdata) {
-//     console.log(claimdata);
-//   } else {
-//     ("data not saved");
-//   }
-// });
 
 app.get("/adminClaim", async (req, res) => {
 
@@ -232,6 +221,70 @@ app.post("/checkout", async (req, res) => {
   
   
    console.log(req.body);
+
+});
+
+app.post("/predict", async (req, res) => { 
+  
+  // Specify the path to your Python script
+
+const pythonScriptPath = "../script";
+
+// Specify the path to your serialized KNN model
+const modelPath = modeeelPath;
+
+// Form data from React
+const formData = {'_id':'',
+      'user_id':'',
+      'broker_name':'Jane Mackarenel',
+      'policy_code':'',
+      'damage_coverage':'full coverage',
+      'location':'esdreresf',
+      'date_time':'',
+      'description':'Lorem ipsum dolor sit amet, consectetur adipisicing elit.illo possimus tenetur venia',
+      'file':'',
+      'submitted_time':'',
+    // your form data
+    
+      
+    
+};
+
+// Prepare the data to be passed to the Python script
+const inputData = JSON.stringify(formData);
+// console.log(inputData);
+
+// Set up the options for the Python script
+  const options = {
+    mode: 'text',
+    // pythonPath: 'C:\Users\GWC IDB\AppData\Local\Programs\Python\Python312\python.exe',
+    pythonOptions: ['-u'],
+    scriptPath: pythonScriptPath,
+    args: [modelPath, inputData],
+};
+
+// Run the Python script
+PythonShell.run('predict.py', options, function(err, results) {
+    if (err) throw err;
+    const prediction = JSON.parse(results[0]);
+    console.log('Prediction:', prediction);
+});
+
+
+
+});
+
+app.post("/chat", async (req, res) => {
+
+  const chat = new chatmodel({
+    ...req.body,
+  });
+  let chatSave = await chat.save();
+  if(chatSave){
+    res.json({status:"success",message:"chat saved",data:chatSave});
+  }else{
+    res.json({status:"failed",message:"chat not saved"});
+  }
 
 });
 
