@@ -14,6 +14,7 @@ const chatmodel = require("./model/messages");
 const Policymodel = require("./model/policymodel");
 const multer  = require('multer')
 const { PythonShell } = require('python-shell');
+const policymodel = require("./model/policymodel");
 
 const modeeelPath = './model.pkl';
 // const predict = require('../script/predict.py');
@@ -288,6 +289,42 @@ app.post("/chat", async (req, res) => {
 
 });
 
+app.post("/delete/:itemID", async (req, res) => {
+  let itemID = req.params.itemID;
+  console.log(itemID);
+  const item = await Policymodel.findByIdAndDelete(itemID);
+  if (!item) {
+    console.log("item not found");
+    res.json({status:"failed",message:"No such record found"});
+  } else {
+    res.json({status:"success",message:"Policy Record Deleted"});
+    console.log("item deleted");
+  }
+
+});
+
+app.post("/edit/:itemID", async (req, res) => {
+  let itemID = req.params.itemID;
+  console.log(itemID);
+  console.log(req.body);
+  // modifiedData = JSON.parse(req.body.formData);
+  // console.log(modifiedData);  
+  const item = await Policymodel.findById(itemID);
+
+
+  if (!item) {
+    console.log("item not found");
+    // res.json({status:"failed",message:"No such record found"});
+  } else {
+    // Update the existing item object
+    item.set(req.body);
+    // Save the updated item
+    const updatedItem = await item.save();
+    console.log(updatedItem);
+    // res.json({status:"success",message:"Policy Record Updated",data:updatedItem});
+    // console.log(updatedItem);
+  }
+});
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");
