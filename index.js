@@ -25,19 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static('uploads'));
 
-// app.get('/data', (req, res) => {
-//     const collection = client.db("mydatabase").collection("mycollection");
 
-//     // Find all documents in the MongoDB collection
-//   collection.find().toArray((err, docs) => {
-//     if (err) {
-//       console.error(err);
-//       res.status(500).send("Internal server error");
-//     } else {
-//       res.send(docs);
-//     }
-//   });
-// });
 app.post("/", async (req, res) => {
   try {
     // Create a new user object from request body
@@ -103,7 +91,7 @@ app.post("/login", async (req, res) => {
   });
 
   if (!user) {
-    res.send({ status: "failed", message: "User not found" });
+    res.send({ status: "failed", message: "Wrong Credential. Access Denied" });
   } else {
     const comparePassword = await bcrypt.compare(password, user.password);
     if (!comparePassword) {
@@ -226,15 +214,9 @@ app.post("/checkout", async (req, res) => {
 });
 
 app.post("/predict", async (req, res) => { 
-  
-  // Specify the path to your Python script
 
 const pythonScriptPath = "../script";
-
-// Specify the path to your serialized KNN model
 const modelPath = modeeelPath;
-
-// Form data from React
 const formData = {'_id':'',
       'user_id':'',
       'broker_name':'Jane Mackarenel',
@@ -244,36 +226,65 @@ const formData = {'_id':'',
       'date_time':'',
       'description':'Lorem ipsum dolor sit amet, consectetur adipisicing elit.illo possimus tenetur venia',
       'file':'',
-      'submitted_time':'',
-    // your form data
-    
-      
-    
+      'submitted_time':'',         
 };
-
-// Prepare the data to be passed to the Python script
 const inputData = JSON.stringify(formData);
-// console.log(inputData);
-
-// Set up the options for the Python script
   const options = {
     mode: 'text',
-    // pythonPath: 'C:\Users\GWC IDB\AppData\Local\Programs\Python\Python312\python.exe',
     pythonOptions: ['-u'],
     scriptPath: pythonScriptPath,
     args: [modelPath, inputData],
 };
-
-// Run the Python script
 PythonShell.run('predict.py', options, function(err, results) {
     if (err) throw err;
     const prediction = JSON.parse(results[0]);
     console.log('Prediction:', prediction);
 });
 
-
-
 });
+
+// app.post("/predict", async (req, res) => { 
+
+//   // Specify the path to Python script
+// const pythonScriptPath = "../script";
+
+// // Specify the path to your serialized KNN model
+// const modelPath = modeeelPath;
+
+// // Form data from React
+// const formData = {'_id':'',
+//       'user_id':'',
+//       'broker_name':'Jane Mackarenel',
+//       'policy_code':'',
+//       'damage_coverage':'full coverage',
+//       'location':'esdreresf',
+//       'date_time':'',
+//       'description':'Lorem ipsum dolor sit amet, consectetur adipisicing elit.illo possimus tenetur venia',
+//       'file':'',
+//       'submitted_time':'',         
+// };
+
+// // Prepare the data to be passed to the Python script
+// const inputData = JSON.stringify(formData);
+
+// // Set up the options for the Python script
+//   const options = {
+//     mode: 'text',
+//     pythonOptions: ['-u'],
+//     scriptPath: pythonScriptPath,
+//     args: [modelPath, inputData],
+// };
+
+// // Run the Python script
+// PythonShell.run('predict.py', options, function(err, results) {
+//     if (err) throw err;
+//     const prediction = JSON.parse(results[0]);
+//     console.log('Prediction:', prediction);
+// });
+
+
+
+// });
 
 app.post("/chat", async (req, res) => {
 
