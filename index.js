@@ -325,16 +325,29 @@ app.post("/edit/:itemID", async (req, res) => {
 
   if (!item) {
     console.log("item not found");
-    // res.json({status:"failed",message:"No such record found"});
+    res.json({status:"failed",message:"No such record found"});
   } else {
     // Update the existing item object
     item.set(req.body);
     // Save the updated item
     const updatedItem = await item.save();
     console.log(updatedItem);
-    // res.json({status:"success",message:"Policy Record Updated",data:updatedItem});
+    res.json({status:"success",message:"Policy Record Updated",data:updatedItem});
     // console.log(updatedItem);
   }
+});
+
+app.get("/getAllUsers", async (req, res) => {
+  
+    const userdata = await usermodel.find();
+  
+    if (userdata) {
+      res.json({status:"success",message:"data retrieved" ,data:userdata});
+      // console.log();
+    } else {
+      ("Could not get data");
+    }
+
 });
 
 app.listen(5000, () => {
