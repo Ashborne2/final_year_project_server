@@ -15,6 +15,7 @@ const Policymodel = require("./model/policymodel");
 const multer  = require('multer')
 const { PythonShell } = require('python-shell');
 const policymodel = require("./model/policymodel");
+const Paymentmodel = require("./model/payment");
 
 const modeeelPath = './model.pkl';
 // const predict = require('../script/predict.py');
@@ -207,9 +208,26 @@ app.get("/getpolicy", async (req, res) => {
 });
 
 app.post("/checkout", async (req, res) => {
+  paymentdata = req.body;
+  const payment = new Paymentmodel({
+    ...paymentdata,
+  })
+  console.log(payment);
   
+  let paymentSave = await payment.save();
+
+});
+
+app.get("/getPayments", async (req, res) => {
   
-   console.log(req.body);
+    const paymentdata = await Paymentmodel.find();
+  
+    if (paymentdata) {
+      res.json({status:"success",message:"data retrieved" ,data:paymentdata});
+      // console.log();
+    } else {
+      res.json({status:"failed",message:"no data found"});
+    }
 
 });
 
