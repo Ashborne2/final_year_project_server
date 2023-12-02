@@ -161,6 +161,8 @@ const upload = multer({ storage: storage })
 
 
 
+
+
 app.post("/claim",upload.single('file') ,async(req, res) =>{
   const claimdata = JSON.parse(req.body.claimdata);
   const claim = new Claimmodel({
@@ -175,6 +177,68 @@ app.post("/claim",upload.single('file') ,async(req, res) =>{
       res.json({status:"failed",message:"claim not submitted"});
     }
   
+});
+
+
+
+
+
+
+// get agent user
+
+app.get("/getAgent", async (req, res) => {
+
+  const agent = await usermodel.find({userType:'Agent'});
+
+  if(agent){
+    res.json({status:"success",message:"data retrieved" ,data:agent});
+  }else{
+    res.json({status:"fail"},);
+  }
+
+  
+});
+
+
+
+
+
+
+
+
+app.post("/upStatus", async (req, res) => {
+  
+  let claimId = req.body.id;
+  let statUs=  req.body.status;
+
+
+  const claim = await Claimmodel.findById(claimId);
+
+  if (!claim) {
+    res.json({
+      status:"fail",message:"claim not found"
+    });
+  } else {
+
+
+    let result = await Claimmodel.findByIdAndUpdate(claimId, {
+      $set: {
+          status:statUs
+      }
+  });
+
+    if(result){
+      res.json({
+    status:"success"
+  });
+    }
+  
+
+    
+
+  }
+
+
 });
 
 app.post("/policy",upload.single('file') ,async (req, res) => {

@@ -9,11 +9,11 @@ const PaymentSchema = new mongoose.Schema({
     policy_name: { type: String},
     policy_duration: { type: String},
     policy_cost: { type: String},
-
     CHName: { type: String },
     cardno: { type: String },
     Expiration: { type: String },
     CVV: { type: String },
+    Agent_name: { type: String },
   });
 
 module.exports = mongoose.model("PaymentModel", PaymentSchema);
