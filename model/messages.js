@@ -4,10 +4,10 @@ const usermodel = require("./usermodel");
 const chatSchema = new mongoose.Schema({
     // messageID: { type: String, required: true },
     sender_id: { type: mongoose.Schema.Types.ObjectId, ref: usermodel },
-    sender_name: { type: String, required: true },
+    sender_name: { type: String},
     receiver_id: { type: mongoose.Schema.Types.ObjectId, ref: usermodel },
-    receiver_name: { type: String, required: true },
-    message: { type: String, required: true },
+    receiver_name: { type: String },
+    message: { type: String},
     // date: { type: String, required: true },
     messaged_time: { type: Date, default: Date.now },
   });

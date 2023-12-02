@@ -297,31 +297,31 @@ app.get("/getPayments", async (req, res) => {
 
 app.post("/predict", async (req, res) => { 
 
-const pythonScriptPath = "../script";
-const modelPath = modeeelPath;
-const formData = {'_id':'',
-      'user_id':'',
-      'broker_name':'Jane Mackarenel',
-      'policy_code':'',
-      'damage_coverage':'full coverage',
-      'location':'esdreresf',
-      'date_time':'',
-      'description':'Lorem ipsum dolor sit amet, consectetur adipisicing elit.illo possimus tenetur venia',
-      'file':'',
-      'submitted_time':'',         
-};
-const inputData = JSON.stringify(formData);
-  const options = {
-    mode: 'text',
-    pythonOptions: ['-u'],
-    scriptPath: pythonScriptPath,
-    args: [modelPath, inputData],
-};
-PythonShell.run('predict.py', options, function(err, results) {
-    if (err) throw err;
-    const prediction = JSON.parse(results[0]);
-    console.log('Prediction:', prediction);
-});
+  const pythonScriptPath = "../script";
+  const modelPath = modeeelPath;
+  const formData = {'_id':'',
+        'user_id':'',
+        'broker_name':'Jane Mackarenel',
+        'policy_code':'',
+        'damage_coverage':'full coverage',
+        'location':'esdreresf',
+        'date_time':'',
+        'description':'Lorem ipsum dolor sit amet, consectetur adipisicing elit.illo possimus tenetur venia',
+        'file':'',
+        'submitted_time':'',         
+  };
+  const inputData = JSON.stringify(formData);
+    const options = {
+      mode: 'text',
+      pythonOptions: ['-u'],
+      scriptPath: pythonScriptPath,
+      args: [modelPath, inputData],
+  };
+  PythonShell.run('predict.py', options, function(err, results) {
+      if (err) throw err;
+      const prediction = JSON.parse(results[0]);
+      console.log('Prediction:', prediction);
+  });
 
 });
 
@@ -431,6 +431,126 @@ app.get("/getAllUsers", async (req, res) => {
     }
 
 });
+
+
+
+
+
+app.post("/assignAgent", async (req, res) => {
+
+  const Payment = await Paymentmodel.findOne({_id:req.body.claimId});
+
+
+  if (!Payment) {
+    
+
+    res.json({status:"failed",message:"No such record found"});
+  } else {
+
+
+      let result = await Paymentmodel.findByIdAndUpdate(req.body.claimId, {
+        $set: {
+            Agent_name: req.body.agentName,
+            
+        }
+    })
+
+
+    await usermodel.findByIdAndUpdate(Payment.user_id, {
+      $set: {
+          Agent_name: req.body.agentName,
+          Agent_id: req.body.agentId
+          
+      }
+    })
+
+
+  //   res.json({status:"success",message:"Policy Record Deleted"});
+  }
+
+});
+
+
+
+app.get("/userFindAllpolicyes/:id", async (req, res) => {
+
+
+  let userId = req.params.id;
+
+
+  let wholePayment = await Paymentmodel.find();
+
+  let userspolicies =[];
+
+
+  wholePayment.forEach(async (element) => {
+
+
+    if(element.user_id ==  userId){
+      userspolicies.push(element);
+    }
+  });
+
+  res.json({status:"success",message:"data retrieved" ,data:userspolicies});
+
+  
+
+
+});
+
+
+
+app.get("/getAllPayments", async (req, res) => {
+    
+    const paymentdata = await Paymentmodel.find();
+  
+    if (paymentdata) {
+      res.json({status:"success",message:"data retrieved" ,data:paymentdata});
+      // console.log();
+    } else {
+      ("Could not get data");
+    }
+
+});
+
+
+
+
+app.post("/userSendMessage", async (req, res) => {
+
+  console.log(req.body);
+
+  const chat = new chatmodel({
+    ...req.body
+  })
+
+
+  let result = await chat.save();
+  console.log(result);
+
+
+});
+
+
+app.get("/getMessages", async (req, res) => {
+    
+  const chatData = await chatmodel.find();
+
+  if (chatData) {
+    res.json({status:"success",message:"data retrieved" ,data:chatData});
+    // console.log();
+  } else {
+    ("Could not get data");
+  }
+
+});
+
+
+
+
+
+
+
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");

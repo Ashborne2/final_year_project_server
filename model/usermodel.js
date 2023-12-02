@@ -16,6 +16,8 @@ const userSchema = new mongoose.Schema({
   userType: { type: String },
   address: { type: String  },
   nin: { type: String }, //national insurance number
+  Agent_name: { type: String , default: ""},
+  Agent_id: { type: String, default: "" },
 });
 
 

@@ -13,6 +13,7 @@ const claimSchema = new mongoose.Schema({
   submitted_time: { type: Date, default: Date.now },
   description: { type: String },
   file: { type: String },
+  Agent_name: { type: String },
   status: { type: String, default: "Pending"}
 });
 
